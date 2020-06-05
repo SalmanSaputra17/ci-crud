@@ -8,18 +8,36 @@ class Mahasiswa extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->model('Mahasiswa_model');
+		$this->load->model('Mahasiswa_model', 'Mahasiswa');
 		$this->load->library('form_validation');
+		$this->load->library('pagination');
 
 		$this->title = 'Mahasiswa | ';
 	}
 
 	public function index()
 	{
-		$filter = $this->input->post('search', true);
-
 		$data['title'] = $this->title . 'index';
-		$data['mahasiswa'] = $this->Mahasiswa_model->all($filter);
+
+		if (!is_null($this->input->post('filter'))) {
+			$data['filter'] = $this->input->post('filter'); 
+			$this->session->set_userdata('filter', $data['filter']);
+		} else {
+			$data['filter'] = $this->session->userdata('filter');
+		}
+
+		$this->db->like('nama', $data['filter']);
+		$this->db->or_like('nrp', $data['filter']);
+		$this->db->or_like('email', $data['filter']);
+		$this->db->or_like('jurusan', $data['filter']);
+		$this->db->from($this->Mahasiswa->getSource());
+
+		$config['total_rows'] = $this->db->count_all_results();
+		$config['per_page'] = 10;
+
+		$this->pagination->initialize($config);
+
+		$data['mahasiswa'] = $this->Mahasiswa->all($config['per_page'], $this->uri->segment(3), $data['filter']);
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('mahasiswa/index', $data);
@@ -29,7 +47,7 @@ class Mahasiswa extends CI_Controller
 	public function create()
 	{
 		$data['title'] = $this->title . 'Tambah';
-		$data['jurusan'] = $this->Mahasiswa_model->listJurusan();
+		$data['jurusan'] = $this->Mahasiswa->listJurusan();
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('mahasiswa/create', $data);
@@ -45,13 +63,13 @@ class Mahasiswa extends CI_Controller
 
 		if ($this->form_validation->run() == false) {
 			$data['title'] = $this->title . 'Tambah';
-			$data['jurusan'] = $this->Mahasiswa_model->listJurusan();
+			$data['jurusan'] = $this->Mahasiswa->listJurusan();
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('mahasiswa/create', $data);
 			$this->load->view('templates/footer');
 		} else {
-			$this->Mahasiswa_model->save();
+			$this->Mahasiswa->save();
 			$this->session->set_flashdata('info', 'Data berhasil ditambahkan.');
 
 			redirect('mahasiswa');
@@ -60,14 +78,14 @@ class Mahasiswa extends CI_Controller
 
 	public function detail($id)
 	{
-		echo json_encode($this->Mahasiswa_model->findById($id));
+		echo json_encode($this->Mahasiswa->findById($id));
 	}
 
 	public function edit($id)
 	{
 		$data['title'] = $this->title . 'Ubah';
-		$data['jurusan'] = $this->Mahasiswa_model->listJurusan();
-		$data['model'] = $this->Mahasiswa_model->findById($id);
+		$data['jurusan'] = $this->Mahasiswa->listJurusan();
+		$data['model'] = $this->Mahasiswa->findById($id);
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('mahasiswa/edit', $data);
@@ -83,14 +101,14 @@ class Mahasiswa extends CI_Controller
 
 		if ($this->form_validation->run() == false) {
 			$data['title'] = $this->title . 'Ubah';
-			$data['jurusan'] = $this->Mahasiswa_model->listJurusan();
-			$data['model'] = $this->Mahasiswa_model->findById($id);
+			$data['jurusan'] = $this->Mahasiswa->listJurusan();
+			$data['model'] = $this->Mahasiswa->findById($id);
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('mahasiswa/edit', $data);
 			$this->load->view('templates/footer');
 		} else {
-			$this->Mahasiswa_model->update();
+			$this->Mahasiswa->update();
 			$this->session->set_flashdata('info', 'Data berhasil diubah.');
 
 			redirect('mahasiswa');
@@ -99,7 +117,7 @@ class Mahasiswa extends CI_Controller
 
 	public function delete($id)
 	{
-		$this->Mahasiswa_model->delete($id);
+		$this->Mahasiswa->delete($id);
 		$this->session->set_flashdata('info', 'Data berhasil dihapus.');
 
 		redirect('mahasiswa');

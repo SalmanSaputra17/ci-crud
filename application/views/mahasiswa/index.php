@@ -2,17 +2,30 @@
 	<div class="row mt-3">
 		<div class="col-12">
 			<a href="<?= base_url() ?>mahasiswa/create" class="btn btn-primary btn-sm">Tambah Data Mahasiswa</a>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
 			<h3 class="display-4 mt-2 mb-4">Daftar Mahasiswa</h3>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-6">
+			<form action="<?= base_url('mahasiswa') ?>" method="post">
+	            <div class="input-group">
+	                <input type="text" class="form-control" placeholder="Cari nama ..." id="filter" name="filter" autocomplete="off" autofocus>
+	                <div class="input-group-append">
+	                    <button type="submit" name="submit-filter" class="btn btn-secondary">Cari</button>
+	                </div>
+	            </div>
+	        </form>
+		</div>
+	</div>
 
-			<form action="" method="post">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Cari nama ..." id="search" name="search" autocomplete="off">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary" id="btn-search">Cari</button>
-                    </div>
-                </div>
-            </form>
-
+	<div class="row mt-3">
+		<div class="col-12">
 			<?php if ($this->session->flashdata('info')): ?>
 				<div class="alert alert-success alert-dismissible fade show" role="alert">
 				  <?= $this->session->flashdata('info') ?>
@@ -33,6 +46,8 @@
 				  		</li>
 					<?php endforeach; ?>
 				</ul>
+				
+				<?= $this->pagination->create_links(); ?>
 			<?php else: ?>
 				<div class="alert alert-warning" role="alert">
 				  	Tidak ada data mahasiswa.

@@ -2,18 +2,21 @@
 
 class Mahasiswa_model extends CI_Model 
 {
-	private $table = 'mahasiswa';
+	public function getSource()
+	{
+		return 'mahasiswa';
+	}
 
-	public function all($filter = "")
+	public function all($limit, $offset, $filter = null)
 	{	
-		if (!empty($filter)) {
+		if (!is_null($filter)) {
 			$this->db->like('nama', $filter);
 			$this->db->or_like('nrp', $filter);
 			$this->db->or_like('email', $filter);
 			$this->db->or_like('jurusan', $filter);
 		}
 
-		return $this->db->get($this->table)->result();
+		return $this->db->get($this->getSource(), $limit, $offset)->result();
 	}
 
 	public function save()
@@ -25,12 +28,12 @@ class Mahasiswa_model extends CI_Model
 			'jurusan' => $this->input->post('jurusan', true),
 		];
 
-		$this->db->insert($this->table, $data);
+		$this->db->insert($this->getSource(), $data);
 	}
 
 	public function findById($id)
 	{
-		return $this->db->get_where($this->table, ['id' => $id])->row();
+		return $this->db->get_where($this->getSource(), ['id' => $id])->row();
 	}
 
 	public function update()
@@ -42,12 +45,12 @@ class Mahasiswa_model extends CI_Model
 			'jurusan' => $this->input->post('jurusan', true),
 		];
 
-		$this->db->update($this->table, $data, ['id' => $this->input->post('id', true)]);	
+		$this->db->update($this->getSource(), $data, ['id' => $this->input->post('id', true)]);	
 	}
 
 	public function delete($id)
 	{
-		$this->db->delete($this->table, ['id' => $id]);
+		$this->db->delete($this->getSource(), ['id' => $id]);
 	}
 
 	public function listJurusan()
