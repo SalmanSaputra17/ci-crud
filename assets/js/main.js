@@ -3,7 +3,7 @@ $('document').ready(function() {
 		let id = $(this).data('id');
 
 		$.ajax({
-            url: './detail/' + id,
+            url: 'http://localhost:8080/CI_App/mahasiswa/detail/' + id,
             method: 'GET',
             success: function(response) {
             	data = JSON.parse(response);
