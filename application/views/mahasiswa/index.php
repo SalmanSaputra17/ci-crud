@@ -15,7 +15,7 @@
 		<div class="col-6">
 			<form action="<?= base_url('mahasiswa') ?>" method="post">
 	            <div class="input-group">
-	                <input type="text" class="form-control" placeholder="Cari nama ..." id="filter" name="filter" autocomplete="off" autofocus>
+	                <input type="text" class="form-control" id="filter" name="filter" value="<?= @$filter; ?>" autocomplete="off" autofocus>
 	                <div class="input-group-append">
 	                    <button type="submit" name="submit-filter" class="btn btn-secondary">Cari</button>
 	                </div>
