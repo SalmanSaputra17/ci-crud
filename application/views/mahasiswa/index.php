@@ -26,21 +26,14 @@
 
 	<div class="row mt-3">
 		<div class="col-12">
-			<?php if ($this->session->flashdata('info')): ?>
-				<div class="alert alert-success alert-dismissible fade show" role="alert">
-				  <?= $this->session->flashdata('info') ?>
-				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				    <span aria-hidden="true">&times;</span>
-				  </button>
-				</div>
-			<?php endif; ?>
+			<div class="flash" data-flashdata="<?= $this->session->flashdata('info'); ?>"></div>
 
 			<?php if(!empty($mahasiswa)): ?>
 				<ul class="list-group">
 					<?php foreach($mahasiswa as $row): ?>
 				  		<li class="list-group-item">
 				  			<?= $row->nama ?>
-				  			<a href="<?= base_url() ?>mahasiswa/delete/<?= $row->id ?>" class="btn btn-danger btn-sm float-right ml-1" onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">Hapus</a>
+				  			<a href="<?= base_url() ?>mahasiswa/delete/<?= $row->id ?>" class="btn btn-danger btn-sm btn-delete float-right ml-1">Hapus</a>
 				  			<a href="<?= base_url() ?>mahasiswa/edit/<?= $row->id ?>" class="btn btn-success btn-sm float-right ml-1">Ubah</a>
 				  			<button data-id="<?= $row->id ?>" class="btn btn-info btn-sm btn-detail float-right ml-1" data-toggle="modal" data-target="#detailModal">Detail</button>
 				  		</li>
